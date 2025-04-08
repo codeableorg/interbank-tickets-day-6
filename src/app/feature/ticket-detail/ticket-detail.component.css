@@ -1,0 +1,36 @@
+.ticket-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.detail-header {
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #6f42c1;
+  padding-bottom: 0.5rem;
+}
+
+.back-btn,
+.back-btn-empty {
+  padding: 0.5rem 1rem;
+  background-color: #6f42c1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 2rem 0;
+  color: #666;
+}

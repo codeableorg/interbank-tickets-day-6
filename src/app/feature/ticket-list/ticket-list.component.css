@@ -1,0 +1,35 @@
+.ticket-list-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #6f42c1;
+  padding-bottom: 0.5rem;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 2rem 0;
+  color: #666;
+}
+
+.tickets-list {
+  margin-top: 1.5rem;
+}
+
+.reset-filters-btn {
+  padding: 0.5rem 1rem;
+  background-color: #6f42c1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-ticket-section {
+  margin-bottom: 2rem;
+}

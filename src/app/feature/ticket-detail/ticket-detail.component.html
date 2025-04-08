@@ -1,0 +1,32 @@
+<div class="ticket-detail-container">
+  <div class="detail-header">
+    <button (click)="goBack()" class="back-btn">&larr; Back to tickets</button>
+    <h1>Edit Ticket</h1>
+  </div>
+
+  @let error = ticketStore.error(); @if (error) {
+  <app-error-state
+    [message]="error"
+    (retry)="loadTicket()"
+    (dismiss)="ticketStore.clearError()"
+  ></app-error-state>
+  } @if (!ticketStore.loaded()) {
+  <div class="loading-indicator">
+    <p>Loading ticket details...</p>
+  </div>
+  } @if (ticketStore.loaded() && ticketStore.selectedTicket()) {
+  <app-ticket-form
+    [ticket]="ticketStore.selectedTicket()"
+    (update)="updateTicket($event)"
+    (cancel)="goBack()"
+  ></app-ticket-form>
+  } @if (ticketStore.loaded() && !ticketStore.selectedTicket() &&
+  !ticketStore.error()) {
+  <app-empty-state
+    title="Ticket Not Found"
+    message="The ticket you're looking for could not be found."
+  >
+    <button (click)="goBack()" class="back-btn-empty">Return to Tickets</button>
+  </app-empty-state>
+  }
+</div>

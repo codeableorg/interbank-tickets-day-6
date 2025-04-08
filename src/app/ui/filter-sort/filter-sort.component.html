@@ -1,0 +1,33 @@
+<div class="filter-sort">
+  <div class="filter-group">
+    <div class="search-box">
+      <input type="text" [ngModel]="filter.searchTerm" (ngModelChange)="onSearchChange($event)" placeholder="Search tickets..." class="search-input" />
+    </div>
+
+    <div class="status-filter">
+      <select [ngModel]="filter.status" (ngModelChange)="onStatusChange($event)" class="status-select">
+        <option value="all">All Statuses</option>
+        <option value="open">Open</option>
+        <option value="in progress">In Progress</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="sort-group">
+    <select [ngModel]="sort.field" (ngModelChange)="onSortFieldChange($event)" class="sort-select">
+      <option value="createdAt">Created Date</option>
+      <option value="title">Title</option>
+      <option value="status">Status</option>
+    </select>
+
+    <button (click)="onSortDirectionChange()" class="sort-direction-btn">
+      @if (sort.direction === 'asc') {
+      <span>↑</span>
+      }
+      @if (sort.direction === 'desc') {
+      <span>↓</span>
+      }
+    </button>
+  </div>
+</div>

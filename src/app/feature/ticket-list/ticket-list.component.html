@@ -1,0 +1,48 @@
+<div class="ticket-list-container">
+  <h1>Ticket Management</h1>
+
+  @let error = ticketStore.error(); @if (error) {
+  <app-error-state
+    [message]="error"
+    (retry)="loadTickets()"
+    (dismiss)="ticketStore.clearError()"
+  ></app-error-state>
+  }
+
+  <div class="create-ticket-section">
+    <app-ticket-form (create)="createTicket($event)"></app-ticket-form>
+  </div>
+
+  <app-filter-sort
+    [filter]="ticketStore.filter()"
+    [sort]="ticketStore.sort()"
+    (filterChange)="ticketStore.setFilter($event)"
+    (sortChange)="ticketStore.setSort($event)"
+  ></app-filter-sort>
+
+  @if (!ticketStore.loaded()) {
+  <div class="loading-indicator">
+    <p>Loading tickets...</p>
+  </div>
+  } @if (ticketStore.loaded()) { @if (ticketStore.sortedTickets().length > 0) {
+  <div class="tickets-list">
+    @for (ticket of ticketStore.sortedTickets(); track ticket.id) {
+    <app-ticket-item
+      [ticket]="ticket"
+      (edit)="navigateToDetail(ticket.id)"
+      (delete)="deleteTicket(ticket.id)"
+      (statusChange)="updateTicketStatus($event.ticket, $event.status)"
+    ></app-ticket-item>
+    }
+  </div>
+  } @if (ticketStore.sortedTickets().length === 0) {
+  <app-empty-state
+    title="No tickets found"
+    message="There are no tickets matching your current filters."
+  >
+    <button (click)="resetFilters()" class="reset-filters-btn">
+      Reset Filters
+    </button>
+  </app-empty-state>
+  } }
+</div>

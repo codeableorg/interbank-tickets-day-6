@@ -1,0 +1,112 @@
+.ticket-item {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #ccc;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ticket-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-open {
+  border-left-color: #17a2b8;
+}
+
+.status-in-progress {
+  border-left-color: #fd7e14;
+}
+
+.status-closed {
+  border-left-color: #28a745;
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.ticket-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.ticket-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.edit-btn {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.complete-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.ticket-content {
+  margin-bottom: 1rem;
+}
+
+.ticket-description {
+  color: #666;
+  margin: 0;
+}
+
+.ticket-footer {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ticket-status {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.open {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.in.progress {
+  background-color: #fd7e14;
+  color: white;
+}
+
+.closed {
+  background-color: #28a745;
+  color: white;
+}
+
+.ticket-date {
+  color: #888;
+}

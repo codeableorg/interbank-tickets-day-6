@@ -1,0 +1,41 @@
+<form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" class="ticket-form">
+  <h3 class="form-title">
+    {{ ticket ? 'Edit Ticket' : 'Create New Ticket' }}
+  </h3>
+
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input id="title" type="text" formControlName="title" placeholder="Enter ticket title" class="form-control" />
+    @if (hasError('title')) {
+    <div class="error-message">Title is required</div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea id="description" formControlName="description" placeholder="Describe the issue or task" class="form-control textarea" rows="3"></textarea>
+    @if (hasError('description')) {
+    <div class="error-message">Description is required</div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="status">Status</label>
+    <select id="status" formControlName="status" class="form-control">
+      <option value="open">Open</option>
+      <option value="in progress">In Progress</option>
+      <option value="closed">Closed</option>
+    </select>
+  </div>
+
+  <div class="form-actions">
+    @if (ticket) {
+    <button type="button" (click)="onCancel()" class="cancel-btn">
+      Cancel
+    </button>
+    }
+    <button type="submit" [disabled]="!ticketForm.valid || ticketForm.pristine" class="submit-btn">
+      {{ ticket ? 'Update Ticket' : 'Create Ticket' }}
+    </button>
+  </div>
+</form>
