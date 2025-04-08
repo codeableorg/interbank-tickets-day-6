@@ -11,6 +11,7 @@ import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 })
 export class TicketItemComponent {
   @Input() ticket!: Ticket;
+
   @Output() edit = new EventEmitter<Ticket>();
   @Output() delete = new EventEmitter<Ticket>();
   @Output() statusChange = new EventEmitter<{

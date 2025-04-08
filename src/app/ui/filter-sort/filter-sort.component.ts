@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Ticket, TicketState } from '../../data-access/ticket.model';
+import { Ticket } from '../../data-access/ticket.model';
 
 @Component({
   selector: 'app-filter-sort',
@@ -10,26 +10,31 @@ import { Ticket, TicketState } from '../../data-access/ticket.model';
   styleUrls: ['./filter-sort.component.css'],
 })
 export class FilterSortComponent {
-  @Input() filter!: TicketState['filter'];
-  @Input() sort!: TicketState['sort'];
+  @Input() filter = {
+    status: 'all',
+    searchTerm: '',
+  };
+  @Input() sort = {
+    field: 'title',
+    direction: 'asc',
+  };
 
-  @Output() filterChange = new EventEmitter<Partial<TicketState['filter']>>();
-  @Output() sortChange = new EventEmitter<Partial<TicketState['sort']>>();
+  @Output() filterChange = new EventEmitter();
+  @Output() sortChange = new EventEmitter();
 
   onSearchChange(searchTerm: string) {
-    this.filterChange.emit({ searchTerm });
+    // ...
   }
 
-  onStatusChange(status: TicketState['filter']['status']) {
-    this.filterChange.emit({ status });
+  onStatusChange(status: string) {
+    // ...
   }
 
   onSortFieldChange(field: keyof Ticket) {
-    this.sortChange.emit({ field });
+    // ...
   }
 
   onSortDirectionChange() {
-    const newDirection = this.sort.direction === 'asc' ? 'desc' : 'asc';
-    this.sortChange.emit({ direction: newDirection });
+    // ...
   }
 }

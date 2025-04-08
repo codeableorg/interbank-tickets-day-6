@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-error-state',
   standalone: true,
-  imports: [NgIf],
   templateUrl: './error-state.component.html',
   styleUrls: ['./error-state.component.css'],
 })
