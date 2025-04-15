@@ -1,9 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { TicketItemComponent } from '../../ui/ticket-item/ticket-item.component';
 import { TicketFormComponent } from '../../ui/ticket-form/ticket-form.component';
 import { FilterSortComponent } from '../../ui/filter-sort/filter-sort.component';
-import { Ticket } from '../../data-access/ticket.model';
+import { TicketService } from '../../data-access/ticket.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -13,13 +12,5 @@ import { Ticket } from '../../data-access/ticket.model';
   styleUrls: ['./ticket-list.component.css'],
 })
 export default class TicketListComponent {
-  router = inject(Router);
-
-  ticket: Ticket = {
-    id: 0,
-    title: 'Demo Ticket',
-    description: 'This is a demo ticket description.',
-    status: 'open',
-    createdAt: new Date(),
-  };
+  ticketService = inject(TicketService);
 }

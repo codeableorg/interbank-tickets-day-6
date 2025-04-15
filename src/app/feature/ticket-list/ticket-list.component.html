@@ -8,6 +8,17 @@
   <app-filter-sort></app-filter-sort>
 
   <div class="tickets-list">
-    <app-ticket-item [ticket]="ticket"></app-ticket-item>
+    @if (!ticketService.loaded()) {
+      <p>Loading...</p>
+    } @else if (ticketService.error()) {
+      <p>{{ ticketService.error() }}</p>
+    } @else {
+      @for (ticket of ticketService.tickets(); track ticket.id) {
+        <app-ticket-item
+          [ticket]="ticket"
+          (statusChange)="ticketService.changeStatus$.next($event)"
+        ></app-ticket-item>
+      }
+    }
   </div>
 </div>
