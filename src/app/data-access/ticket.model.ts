@@ -7,10 +7,16 @@ export interface Ticket {
   updatedAt?: Date | null;
 }
 
-export interface CreateTicketDto {
-  title: string;
-  description: string;
-  status: 'open' | 'in progress' | 'closed';
-}
+export type CreateTicketDto = Pick<Ticket, 'title' | 'description' | 'status'>;
 
 export type UpdateTicketDto = Partial<CreateTicketDto>;
+
+export type Filter = {
+  status: 'all' | 'open' | 'in progress' | 'closed';
+  searchTerm: string;
+};
+
+export type Sort = {
+  field: keyof Ticket;
+  direction: 'asc' | 'desc';
+};

@@ -1,8 +1,18 @@
 <div class="ticket-detail-container">
   <div class="detail-header">
-    <button class="back-btn">&larr; Back to tickets</button>
+    <a routerLink="/tickets" class="back-btn">&larr; Back to tickets</a>
     <h1>Edit Ticket</h1>
   </div>
 
-  <app-ticket-form></app-ticket-form>
+  @if (ticketService.currentTicketLoading()) {
+  <p>Loading ticket...</p>
+  } @else if (ticketService.currentTicketError()) {
+  <p>{{ ticketService.currentTicketError() }}</p>
+  } @else {
+  <app-ticket-form
+    (cancel)="router.navigate(['/tickets'])"
+    [ticket]="ticketService.currentTicket()"
+    (update)="onUpdate($event)"
+  ></app-ticket-form>
+  }
 </div>

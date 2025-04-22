@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TicketItemComponent } from '../../ui/ticket-item/ticket-item.component';
 import { TicketFormComponent } from '../../ui/ticket-form/ticket-form.component';
 import { FilterSortComponent } from '../../ui/filter-sort/filter-sort.component';
-import { TicketService } from '../../data-access/ticket.service';
+import { TicketsService } from '../../data-access/tickets.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -12,5 +12,5 @@ import { TicketService } from '../../data-access/ticket.service';
   styleUrls: ['./ticket-list.component.css'],
 })
 export default class TicketListComponent {
-  ticketService = inject(TicketService);
+  ticketService = inject(TicketsService);
 }

@@ -2,10 +2,15 @@
   <h1>Ticket Management</h1>
 
   <div class="create-ticket-section">
-    <app-ticket-form></app-ticket-form>
+    <app-ticket-form (create)="ticketService.createTicket$.next($event)"></app-ticket-form>
   </div>
 
-  <app-filter-sort></app-filter-sort>
+  <app-filter-sort
+    [filter]="ticketService.filter()"
+    [sort]="ticketService.sort()"
+    (filterChange)="ticketService.filterChange$.next($event)"
+    (sortChange)="ticketService.sortChange$.next($event)"
+  ></app-filter-sort>
 
   <div class="tickets-list">
     @if (!ticketService.loaded()) {
@@ -17,6 +22,7 @@
         <app-ticket-item
           [ticket]="ticket"
           (statusChange)="ticketService.changeStatus$.next($event)"
+          (delete)="ticketService.deleteTicket$.next($event)"
         ></app-ticket-item>
       }
     }

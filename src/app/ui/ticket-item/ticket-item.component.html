@@ -1,13 +1,13 @@
-<div class="ticket-item" [ngClass]="'status-' + ticket.status">
+<div class="ticket-item" [ngClass]="'status-' + ticket().status">
   <div class="ticket-header">
     <h3 class="ticket-title">
-      {{ ticket.title }}
+      {{ ticket().title }}
     </h3>
     <div class="ticket-actions">
-      <button (click)="edit.emit(ticket)" class="action-btn edit-btn">
+      <a [routerLink]="['/tickets', ticket().id]" class="action-btn edit-btn">
         Edit
-      </button>
-      <button (click)="delete.emit(ticket)" class="action-btn delete-btn">
+      </a>
+      <button (click)="delete.emit(ticket())" class="action-btn delete-btn">
         Delete
       </button>
     </div>
@@ -15,22 +15,25 @@
 
   <div class="ticket-content">
     <p class="ticket-description">
-      {{ ticket.description }}
+      {{ ticket().description }}
     </p>
   </div>
 
   <div class="ticket-footer">
-    <span class="ticket-status" [ngClass]="ticket.status">
-      {{ ticket.status | titlecase }}
+    <span class="ticket-status" [ngClass]="ticket().status">
+      {{ ticket().status | titlecase }}
     </span>
     <span class="ticket-date">
       Created:
-      {{ ticket.createdAt | date : 'short' }}
+      {{ ticket().createdAt | date: "short" }}
     </span>
-    @if (ticket.status !== 'closed') {
-    <button (click)="statusChange.emit({ ticket, status: 'closed' })" class="action-btn complete-btn">
-      Mark as Complete
-    </button>
+    @if (ticket().status !== "closed") {
+      <button
+        (click)="statusChange.emit({ ticket: ticket(), status: 'closed' })"
+        class="action-btn complete-btn"
+      >
+        Mark as Complete
+      </button>
     }
   </div>
 </div>

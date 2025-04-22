@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan"); // Add morgan for logging
 const ticketRoutes = require("./routes/tickets");
 
 const app = express();
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev")); // Log HTTP requests to the console
 
 // Routes
 app.use("/api/tickets", ticketRoutes);

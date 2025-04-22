@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, effect, inject, input, output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -19,22 +19,32 @@ import {
   styleUrls: ['./ticket-form.component.css'],
 })
 export class TicketFormComponent {
-  @Input() ticket: Ticket | null = null;
-  @Output() create = new EventEmitter<CreateTicketDto>();
-  @Output() update = new EventEmitter<UpdateTicketDto>();
-  @Output() cancel = new EventEmitter<void>();
+  private fb = inject(FormBuilder);
 
-  ticketForm: FormGroup;
+  ticket = input<Ticket | null>(null);
+  create = output<CreateTicketDto>();
+  update = output<UpdateTicketDto>();
+  cancel = output<void>();
 
-  constructor(private fb: FormBuilder) {
-    this.ticketForm = this.createForm();
-  }
+  // Initialize form with default structure/validators
+  ticketForm: FormGroup = this.fb.group({
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    description: ['', [Validators.required, Validators.minLength(10)]],
+    status: ['open', Validators.required],
+  });
 
-  createForm(): FormGroup {
-    return this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      status: ['open', Validators.required],
+  constructor() {
+    // Use effect to react to ticket input changes and patch the form
+    effect(() => {
+      const currentTicket = this.ticket(); // Get the current signal value
+      if (currentTicket) {
+        // Patch the form when ticket data is available
+        this.ticketForm.patchValue({
+          title: currentTicket.title,
+          description: currentTicket.description,
+          status: currentTicket.status,
+        });
+      }
     });
   }
 
@@ -46,10 +56,18 @@ export class TicketFormComponent {
   }
 
   onSubmit(): void {
-    // complete
+    if (this.ticket()) {
+      // Edit mode
+      this.update.emit(this.ticketForm.value);
+    } else {
+      // Create mode
+      this.create.emit(this.ticketForm.value);
+      this.ticketForm.reset({ title: '', description: '', status: 'open' });
+    }
   }
 
   onCancel(): void {
-    // complete
+    this.cancel.emit();
+    this.ticketForm.reset({ title: '', description: '', status: 'open' });
   }
 }
