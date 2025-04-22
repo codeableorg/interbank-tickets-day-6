@@ -4,14 +4,14 @@
     <h1>Edit Ticket</h1>
   </div>
 
-  @if (ticketService.currentTicketLoading()) {
+  @if (currentTicketService.loading()) {
   <p>Loading ticket...</p>
-  } @else if (ticketService.currentTicketError()) {
-  <p>{{ ticketService.currentTicketError() }}</p>
+  } @else if (currentTicketService.error()) {
+  <p>{{ currentTicketService.error() }}</p>
   } @else {
   <app-ticket-form
     (cancel)="router.navigate(['/tickets'])"
-    [ticket]="ticketService.currentTicket()"
+    [ticket]="currentTicketService.currentTicket()"
     (update)="onUpdate($event)"
   ></app-ticket-form>
   }

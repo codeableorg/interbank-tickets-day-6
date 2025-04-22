@@ -16,9 +16,6 @@ type TicketsState = {
   error: string | null;
   filter: Filter;
   sort: Sort;
-  currentTicket: Ticket | null;
-  currentTicketLoading: boolean;
-  currentTicketError: string | null;
 };
 
 @Injectable({
@@ -35,9 +32,6 @@ export class TicketsService {
     error: null,
     filter: { status: 'all', searchTerm: '' },
     sort: { field: 'createdAt', direction: 'asc' },
-    currentTicket: null,
-    currentTicketLoading: true,
-    currentTicketError: null,
   });
 
   // Sources
@@ -90,9 +84,6 @@ export class TicketsService {
   error = computed(() => this.state().error);
   filter = computed(() => this.state().filter);
   sort = computed(() => this.state().sort);
-  currentTicket = computed(() => this.state().currentTicket);
-  currentTicketLoading = computed(() => this.state().currentTicketLoading);
-  currentTicketError = computed(() => this.state().currentTicketError);
 
   constructor() {
     // Reducers -> Escuchar un Source y actualizar el State
@@ -183,17 +174,10 @@ export class TicketsService {
             tickets: prev.tickets.map((t) =>
               t.id === updated.id ? updated : t
             ),
-            currentTicket:
-              prev.currentTicket?.id === updated.id
-                ? updated
-                : prev.currentTicket,
           }));
         },
         error: (error) => {
           console.error('Error updating ticket', error);
-          this.state.update((prev) => ({
-            ...prev,
-          }));
         },
       });
     });
@@ -208,15 +192,6 @@ export class TicketsService {
           return throwError(() => new Error('Failed to fetch tickets'));
         })
       );
-  }
-
-  private getTicket(id: number): Observable<Ticket> {
-    return this.http.get<Ticket>(`${this.apiUrl}/${id}`).pipe(
-      catchError((error) => {
-        console.error(`Error fetching ticket ${id}`, error);
-        return throwError(() => new Error('Failed to fetch ticket details'));
-      })
-    );
   }
 
   private createTicket(ticket: CreateTicketDto): Observable<Ticket> {
@@ -247,32 +222,5 @@ export class TicketsService {
         return throwError(() => new Error('Failed to delete ticket'));
       })
     );
-  }
-
-  fetchTicketById(id: number) {
-    this.state.update((prev) => ({
-      ...prev,
-      currentTicket: null,
-      currentTicketLoading: true,
-      currentTicketError: null,
-    }));
-    this.getTicket(id).subscribe({
-      next: (ticket) => {
-        this.state.update((prev) => ({
-          ...prev,
-          currentTicket: ticket,
-          currentTicketLoading: false,
-          currentTicketError: null,
-        }));
-      },
-      error: (error) => {
-        this.state.update((prev) => ({
-          ...prev,
-          currentTicket: null,
-          currentTicketLoading: false,
-          currentTicketError: error.message,
-        }));
-      },
-    });
   }
 }

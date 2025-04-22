@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TicketFormComponent } from '../../ui/ticket-form/ticket-form.component';
 import { TicketsService } from '../../data-access/tickets.service';
 import { UpdateTicketDto } from '../../data-access/ticket.model';
+import { CurrentTicketService } from '../../data-access/current-ticket.service';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -11,18 +12,23 @@ import { UpdateTicketDto } from '../../data-access/ticket.model';
   templateUrl: './ticket-detail.component.html',
   styleUrls: ['./ticket-detail.component.css'],
 })
-export default class TicketDetailComponent {
+export default class TicketDetailComponent implements OnInit, OnDestroy {
   route = inject(ActivatedRoute);
   router = inject(Router);
-  ticketService = inject(TicketsService);
-  private ticketId: number = +this.route.snapshot.paramMap.get('id')!;
+  ticketsService = inject(TicketsService);
+  currentTicketService = inject(CurrentTicketService);
+  private ticketId = Number(this.route.snapshot.paramMap.get('id'));
 
-  constructor() {
-    this.ticketService.fetchTicketById(this.ticketId);
+  ngOnInit(): void {
+    this.currentTicketService.fetchTicketById$.next(this.ticketId);
   }
 
   onUpdate(dto: UpdateTicketDto) {
-    this.ticketService.updateTicket$.next({ id: this.ticketId!, dto });
+    this.ticketsService.updateTicket$.next({ id: this.ticketId, dto });
     this.router.navigate(['/tickets']);
+  }
+
+  ngOnDestroy(): void {
+    this.currentTicketService.clearCurrentTicket$.next();
   }
 }
