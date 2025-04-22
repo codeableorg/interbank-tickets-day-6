@@ -184,14 +184,12 @@ export class TicketsService {
   }
 
   private getTickets(): Observable<Ticket[]> {
-    return this.http
-      .get<Ticket[]>(this.apiUrl + '?delay=2000&error=false')
-      .pipe(
-        catchError((error) => {
-          console.error('Error fetching tickets', error);
-          return throwError(() => new Error('Failed to fetch tickets'));
-        })
-      );
+    return this.http.get<Ticket[]>(this.apiUrl).pipe(
+      catchError((error) => {
+        console.error('Error fetching tickets', error);
+        return throwError(() => new Error('Failed to fetch tickets'));
+      })
+    );
   }
 
   private createTicket(ticket: CreateTicketDto): Observable<Ticket> {
