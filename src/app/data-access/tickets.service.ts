@@ -119,7 +119,7 @@ export class TicketsService {
             }));
           },
           error: (error) => {
-            console.error('Error updating ticket status', error);
+            // console.error('Error updating ticket status', error);
           },
         });
       });

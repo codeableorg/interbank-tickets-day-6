@@ -197,4 +197,53 @@ describe('TicketService', () => {
       expect(service.tickets()[0].title).toBe(ticketToUpdate.title); // Title should not have changed
     }));
   });
+
+  describe('Change Status', () => {
+    beforeEach(fakeAsync(() => {
+      const initialTicket = createMockTicket(1, { status: 'open' });
+      const initReq = httpMock.expectOne(`${apiUrl}`);
+      initReq.flush([initialTicket]);
+      tick();
+    }));
+
+    it('should update ticket status via changeStatus$', fakeAsync(() => {
+      const ticketToChange = service.tickets()[0];
+      const newStatus = 'closed';
+      const updatedTicket = {
+        ...ticketToChange,
+        status: newStatus,
+        updatedAt: new Date(),
+      };
+
+      service.changeStatus$.next({ ticket: ticketToChange, status: newStatus });
+      tick();
+
+      const req = httpMock.expectOne(`${apiUrl}/${ticketToChange.id}`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toMatchObject({ status: newStatus });
+      req.flush(updatedTicket);
+      tick();
+
+      expect(service.tickets().length).toBe(1);
+      expect(service.tickets()[0].status).toBe(newStatus);
+      expect(service.error()).toBeNull();
+    }));
+
+    it('should handle error when changing status', fakeAsync(() => {
+      const ticketToChange = service.tickets()[0];
+      const newStatus = 'closed';
+      const errorMessage = 'Failed to update ticket';
+
+      service.changeStatus$.next({ ticket: ticketToChange, status: newStatus });
+      tick();
+
+      const req = httpMock.expectOne(`${apiUrl}/${ticketToChange.id}`);
+      expect(req.request.method).toBe('PUT');
+      req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
+      tick();
+
+      expect(service.tickets().length).toBe(1);
+      expect(service.tickets()[0].status).toBe(ticketToChange.status); // Status should not change
+    }));
+  });
 });
