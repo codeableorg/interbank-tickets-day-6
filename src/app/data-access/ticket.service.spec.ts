@@ -4,7 +4,13 @@ import {
 } from '@angular/common/http/testing';
 import { TicketsService } from './tickets.service';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { CreateTicketDto, Ticket, UpdateTicketDto } from './ticket.model';
+import {
+  CreateTicketDto,
+  Filter,
+  Sort,
+  Ticket,
+  UpdateTicketDto,
+} from './ticket.model';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('TicketService', () => {
@@ -284,5 +290,109 @@ describe('TicketService', () => {
       expect(service.tickets().length).toBe(1); // Ticket should still be there
       expect(service.error()).toBe(errorMessage);
     }));
+  });
+
+  describe('Filtering and Sorting', () => {
+    const ticket1 = createMockTicket(1, {
+      title: 'Alpha Open',
+      status: 'open',
+      createdAt: new Date(2025, 3, 20),
+    });
+    const ticket2 = createMockTicket(2, {
+      title: 'Beta Closed',
+      status: 'closed',
+      createdAt: new Date(2025, 3, 22),
+    });
+    const ticket3 = createMockTicket(3, {
+      title: 'Gamma Open',
+      status: 'open',
+      createdAt: new Date(2025, 3, 21),
+      description: 'Search Me Please', // Set unique description for filtering test
+    });
+
+    beforeEach(fakeAsync(() => {
+      const initReq = httpMock.expectOne(`${apiUrl}`);
+      initReq.flush([ticket1, ticket2, ticket3]); // Start with three tickets
+      tick();
+    }));
+
+    it('should update filter state via filterChange$', () => {
+      const newFilter: Filter = { status: 'open', searchTerm: 'gam' };
+      service.filterChange$.next(newFilter);
+      expect(service.filter()).toEqual(newFilter);
+    });
+
+    it('should filter tickets by status', () => {
+      service.filterChange$.next({ status: 'open', searchTerm: '' });
+      const filteredTickets = service.tickets();
+      expect(filteredTickets.length).toBe(2);
+      expect(filteredTickets.map((t) => t.id)).toEqual([1, 3]);
+
+      service.filterChange$.next({ status: 'closed', searchTerm: '' });
+      expect(service.tickets().length).toBe(1);
+      expect(service.tickets()[0].id).toBe(2);
+
+      service.filterChange$.next({ status: 'all', searchTerm: '' });
+      expect(service.tickets().length).toBe(3);
+    });
+
+    it('should filter tickets by search term (title)', () => {
+      service.filterChange$.next({ status: 'all', searchTerm: 'beta' });
+      const filteredTickets = service.tickets();
+      expect(filteredTickets.length).toBe(1);
+      expect(filteredTickets[0].id).toBe(2);
+    });
+
+    it('should filter tickets by search term (description - case insensitive)', () => {
+      service.filterChange$.next({ status: 'all', searchTerm: 'search me' });
+      const filteredTickets = service.tickets();
+      expect(filteredTickets.length).toBe(1);
+      expect(filteredTickets[0].id).toBe(3);
+    });
+
+    it('should filter tickets by status and search term', () => {
+      service.filterChange$.next({ status: 'open', searchTerm: 'alpha' });
+      const filteredTickets = service.tickets();
+      expect(filteredTickets.length).toBe(1);
+      expect(filteredTickets[0].id).toBe(1);
+    });
+
+    it('should update sort state via sortChange$', () => {
+      const newSort: Sort = { field: 'title', direction: 'desc' };
+      service.sortChange$.next(newSort);
+      expect(service.sort()).toEqual(newSort);
+    });
+
+    it('should sort tickets by title ascending', () => {
+      service.sortChange$.next({ field: 'title', direction: 'asc' });
+      const sortedTickets = service.tickets();
+      expect(sortedTickets.map((t) => t.title)).toEqual([
+        'Alpha Open',
+        'Beta Closed',
+        'Gamma Open',
+      ]);
+    });
+
+    it('should sort tickets by title descending', () => {
+      service.sortChange$.next({ field: 'title', direction: 'desc' });
+      const sortedTickets = service.tickets();
+      expect(sortedTickets.map((t) => t.title)).toEqual([
+        'Gamma Open',
+        'Beta Closed',
+        'Alpha Open',
+      ]);
+    });
+
+    it('should sort tickets by createdAt descending (default is asc)', () => {
+      service.sortChange$.next({ field: 'createdAt', direction: 'desc' });
+      const sortedTickets = service.tickets();
+      expect(sortedTickets.map((t) => t.id)).toEqual([2, 3, 1]);
+    });
+
+    it('should sort tickets by status ascending', () => {
+      service.sortChange$.next({ field: 'status', direction: 'asc' });
+      const sortedTickets = service.tickets();
+      expect(sortedTickets.map((t) => t.id)).toEqual([2, 1, 3]);
+    });
   });
 });
