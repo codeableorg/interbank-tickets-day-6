@@ -4,7 +4,7 @@ import {
 } from '@angular/common/http/testing';
 import { TicketsService } from './tickets.service';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { Ticket } from './ticket.model';
+import { CreateTicketDto, Ticket } from './ticket.model';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('TicketService', () => {
@@ -90,6 +90,60 @@ describe('TicketService', () => {
 
       expect(service.loaded()).toBe(true);
       expect(service.tickets().length).toBe(0);
+      expect(service.error()).toBe(errorMessage);
+    }));
+  });
+
+  describe('Create Ticket', () => {
+    it('should add a new ticket to the state via createTicket$', fakeAsync(() => {
+      // Flush initial GET request
+      const initReq = httpMock.expectOne(apiUrl);
+      expect(initReq.request.method).toBe('GET');
+      initReq.flush([]);
+
+      const newTicketDto: CreateTicketDto = {
+        title: 'New Ticket',
+        description: 'New Desc',
+        status: 'open',
+      };
+      const createdTicket = createMockTicket(3, newTicketDto); // Assume ID 3 is returned
+
+      service.createTicket$.next(newTicketDto); // Trigger the source subject
+      tick();
+
+      const req = httpMock.expectOne(apiUrl);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(newTicketDto);
+      req.flush(createdTicket); // Simulate successful API response
+      tick();
+
+      expect(service.tickets().length).toBe(1);
+      expect(service.tickets()[0]).toEqual(createdTicket);
+      expect(service.error()).toBeNull();
+    }));
+
+    it('should handle error when creating a ticket', fakeAsync(() => {
+      // Flush initial GET request
+      const initReq = httpMock.expectOne(apiUrl);
+      expect(initReq.request.method).toBe('GET');
+      initReq.flush([]);
+
+      const newTicketDto: CreateTicketDto = {
+        title: 'New Ticket',
+        description: 'New Desc',
+        status: 'open',
+      };
+      const errorMessage = 'Failed to create ticket';
+
+      service.createTicket$.next(newTicketDto);
+      tick();
+
+      const req = httpMock.expectOne(apiUrl);
+      expect(req.request.method).toBe('POST');
+      req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
+      tick();
+
+      expect(service.tickets().length).toBe(0); // Ticket should not be added
       expect(service.error()).toBe(errorMessage);
     }));
   });
