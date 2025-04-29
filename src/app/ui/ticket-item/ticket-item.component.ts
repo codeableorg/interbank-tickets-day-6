@@ -13,7 +13,6 @@ import { RouterModule } from '@angular/router';
 export class TicketItemComponent {
   ticket = input.required<Ticket>();
 
-  edit = output<Ticket>();
   delete = output<Ticket>();
   statusChange = output<{
     ticket: Ticket;
