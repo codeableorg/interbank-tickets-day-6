@@ -186,7 +186,7 @@ export class TicketsService {
   private getTickets(): Observable<Ticket[]> {
     return this.http.get<Ticket[]>(this.apiUrl).pipe(
       catchError((error) => {
-        console.error('Error fetching tickets', error);
+        // console.error('Error fetching tickets', error);
         return throwError(() => new Error('Failed to fetch tickets'));
       })
     );
@@ -195,7 +195,7 @@ export class TicketsService {
   private createTicket(ticket: CreateTicketDto): Observable<Ticket> {
     return this.http.post<Ticket>(this.apiUrl, ticket).pipe(
       catchError((error) => {
-        console.error('Error creating ticket', error);
+        // console.error('Error creating ticket', error);
         return throwError(() => new Error('Failed to create ticket'));
       })
     );
@@ -207,7 +207,7 @@ export class TicketsService {
   ): Observable<Ticket> {
     return this.http.put<Ticket>(`${this.apiUrl}/${id}`, ticket).pipe(
       catchError((error) => {
-        console.error(`Error updating ticket ${id}`, error);
+        // console.error(`Error updating ticket ${id}`, error);
         return throwError(() => new Error('Failed to update ticket'));
       })
     );
@@ -216,7 +216,7 @@ export class TicketsService {
   private deleteTicket(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       catchError((error) => {
-        console.error(`Error deleting ticket ${id}`, error);
+        // console.error(`Error deleting ticket ${id}`, error);
         return throwError(() => new Error('Failed to delete ticket'));
       })
     );
