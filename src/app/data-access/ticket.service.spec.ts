@@ -201,7 +201,7 @@ describe('TicketService', () => {
   describe('Change Status', () => {
     beforeEach(fakeAsync(() => {
       const initialTicket = createMockTicket(1, { status: 'open' });
-      const initReq = httpMock.expectOne(`${apiUrl}`);
+      const initReq = httpMock.expectOne(apiUrl);
       initReq.flush([initialTicket]);
       tick();
     }));
@@ -244,6 +244,45 @@ describe('TicketService', () => {
 
       expect(service.tickets().length).toBe(1);
       expect(service.tickets()[0].status).toBe(ticketToChange.status); // Status should not change
+    }));
+  });
+
+  describe('Delete Ticket', () => {
+    beforeEach(fakeAsync(() => {
+      const initialTicket = createMockTicket(1);
+      const initReq = httpMock.expectOne(apiUrl);
+      initReq.flush([initialTicket]);
+    }));
+
+    it('should remove a ticket from the state via deleteTicket$', fakeAsync(() => {
+      const ticketToDelete = service.tickets()[0];
+
+      service.deleteTicket$.next(ticketToDelete);
+      tick();
+
+      const req = httpMock.expectOne(`${apiUrl}/${ticketToDelete.id}`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(null, { status: 204, statusText: 'No Content' }); // Simulate successful delete
+      tick();
+
+      expect(service.tickets().length).toBe(0);
+      expect(service.error()).toBeNull();
+    }));
+
+    it('should handle error when deleting a ticket', fakeAsync(() => {
+      const ticketToDelete = service.tickets()[0];
+      const errorMessage = 'Failed to delete ticket';
+
+      service.deleteTicket$.next(ticketToDelete);
+      tick();
+
+      const req = httpMock.expectOne(`${apiUrl}/${ticketToDelete.id}`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
+      tick();
+
+      expect(service.tickets().length).toBe(1); // Ticket should still be there
+      expect(service.error()).toBe(errorMessage);
     }));
   });
 });
