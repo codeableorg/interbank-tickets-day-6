@@ -139,6 +139,7 @@ describe('TicketListComponent', () => {
     });
 
     it('should forward filter changes to ticketService', async () => {
+      const user = userEvent.setup();
       await renderComponent();
 
       const spy = jest.spyOn(mockTicketsService.filterChange$!, 'next');
@@ -148,14 +149,14 @@ describe('TicketListComponent', () => {
       });
       const searchInput = screen.getByPlaceholderText('Search tickets...');
 
-      await userEvent.selectOptions(statusSelect, 'closed');
+      await user.selectOptions(statusSelect, 'closed');
 
       expect(spy).toHaveBeenLastCalledWith({
         ...defaultFilter,
         status: 'closed',
       });
 
-      await userEvent.type(searchInput, 'test');
+      await user.type(searchInput, 'test');
 
       expect(spy).toHaveBeenLastCalledWith({
         ...defaultFilter,
@@ -164,19 +165,20 @@ describe('TicketListComponent', () => {
     });
 
     it('should forward sort changes to ticketService', async () => {
+      const user = userEvent.setup();
       await renderComponent();
 
       const spy = jest.spyOn(mockTicketsService.sortChange$!, 'next');
 
       const sortSelect = screen.getByRole('combobox', { name: /sort-select/i });
-      await userEvent.selectOptions(sortSelect, 'title');
+      await user.selectOptions(sortSelect, 'title');
 
       expect(spy).toHaveBeenCalledWith({ ...defaultSort, field: 'title' });
 
       const sortDirectionButton = screen.getByRole('button', {
         name: /sort-direction/i,
       });
-      await userEvent.click(sortDirectionButton);
+      await user.click(sortDirectionButton);
 
       expect(spy).toHaveBeenCalledWith({
         ...defaultSort,
