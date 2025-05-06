@@ -1,4 +1,4 @@
-<div class="filter-sort">
+<div class="filter-sort" data-testid="filter-sort">
   <div class="filter-group">
     <div class="search-box">
       <input
@@ -15,6 +15,7 @@
         [ngModel]="filter().status"
         (ngModelChange)="onStatusChange($event)"
         class="status-select"
+        aria-label="status-select"
       >
         <option value="all">All Statuses</option>
         <option value="open">Open</option>
@@ -29,13 +30,18 @@
       [ngModel]="sort().field"
       (ngModelChange)="onSortFieldChange($event)"
       class="sort-select"
+      aria-label="sort-select"
     >
       <option value="createdAt">Created Date</option>
       <option value="title">Title</option>
       <option value="status">Status</option>
     </select>
 
-    <button (click)="onSortDirectionChange()" class="sort-direction-btn">
+    <button
+      (click)="onSortDirectionChange()"
+      class="sort-direction-btn"
+      aria-label="sort-direction"
+    >
       @if (sort().direction === 'asc') {
       <span>↑</span>
       } @if (sort().direction === 'desc') {

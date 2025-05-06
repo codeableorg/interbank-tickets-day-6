@@ -1,4 +1,8 @@
-<div class="ticket-item" [ngClass]="'status-' + ticket().status">
+<div
+  class="ticket-item"
+  [ngClass]="'status-' + ticket().status"
+  [attr.data-testid]="'ticket-item-' + ticket().id"
+>
   <div class="ticket-header">
     <h3 class="ticket-title">
       {{ ticket().title }}
@@ -25,15 +29,15 @@
     </span>
     <span class="ticket-date">
       Created:
-      {{ ticket().createdAt | date: "short" }}
+      {{ ticket().createdAt | date : "short" }}
     </span>
     @if (ticket().status !== "closed") {
-      <button
-        (click)="statusChange.emit({ ticket: ticket(), status: 'closed' })"
-        class="action-btn complete-btn"
-      >
-        Mark as Complete
-      </button>
+    <button
+      (click)="statusChange.emit({ ticket: ticket(), status: 'closed' })"
+      class="action-btn complete-btn"
+    >
+      Mark as Complete
+    </button>
     }
   </div>
 </div>
