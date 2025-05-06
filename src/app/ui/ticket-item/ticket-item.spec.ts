@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/angular';
+import { render, screen } from '@testing-library/angular';
+import userEvent from '@testing-library/user-event';
 import { TicketItemComponent } from './ticket-item.component';
 import { Ticket } from '../../data-access/ticket.model';
 
@@ -46,10 +47,11 @@ describe('TicketItemComponent', () => {
 
   describe('User Interactions', () => {
     it('should trigger delete event when Delete button is clicked', async () => {
+      const user = userEvent.setup();
       await renderComponent();
 
       const deleteButton = screen.getByRole('button', { name: /delete/i });
-      fireEvent.click(deleteButton);
+      await user.click(deleteButton);
 
       expect(deleteSpy).toHaveBeenCalledWith(mockTicket);
     });
@@ -65,12 +67,13 @@ describe('TicketItemComponent', () => {
     });
 
     it('should trigger statusChange event when Mark as Complete button is clicked', async () => {
+      const user = userEvent.setup();
       await renderComponent();
 
       const completeButton = screen.getByRole('button', {
         name: /mark as complete/i,
       });
-      fireEvent.click(completeButton);
+      await user.click(completeButton);
 
       expect(statusChangeSpy).toHaveBeenCalledWith({
         ticket: mockTicket,

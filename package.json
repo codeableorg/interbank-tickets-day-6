@@ -35,6 +35,7 @@
     "@cypress/schematic": "^3.0.0",
     "@testing-library/angular": "^17.3.7",
     "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.14",
     "concurrently": "^8.2.0",
     "cypress": "^14.3.2",
