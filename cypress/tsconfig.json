@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json", // Or your base tsconfig path
+  "compilerOptions": {
+    "outDir": "../dist/out-tsc/cypress", // Or any other outDir specific to Cypress
+    "types": [
+      "cypress",
+      "node" // Often needed for Cypress custom commands or plugins
+    ]
+    // "lib": ["es2018", "dom"] // Ensure DOM is included if not inherited
+  },
+  "include": [
+    "**/*.ts" // Includes all .ts files within the cypress folder
+    // You might also need to include support files explicitly if not covered
+    // e.g., "support/index.ts"
+  ]
+}

@@ -9,6 +9,7 @@ import {
   Sort,
 } from './ticket.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { environment } from '../../environments/environment';
 
 type TicketsState = {
   tickets: Ticket[];
@@ -23,7 +24,7 @@ type TicketsState = {
 })
 export class TicketsService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/tickets';
+  private apiUrl = environment.apiUrl;
 
   // State (signal)
   private state = signal<TicketsState>({

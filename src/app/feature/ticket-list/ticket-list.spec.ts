@@ -1,18 +1,14 @@
-import {
-  getAllByTestId,
-  render,
-  screen,
-  within,
-} from '@testing-library/angular';
+import { render, screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import TicketListComponent from './ticket-list.component';
 import { TicketsService } from '../../data-access/tickets.service';
-import { signal, computed } from '@angular/core';
+import { computed } from '@angular/core';
 import { Ticket, Filter, Sort } from '../../data-access/ticket.model';
 import { Subject } from 'rxjs';
 import { TicketItemComponent } from '../../ui/ticket-item/ticket-item.component';
 import { TicketFormComponent } from '../../ui/ticket-form/ticket-form.component';
 import { FilterSortComponent } from '../../ui/filter-sort/filter-sort.component';
+import { expect } from '@jest/globals';
 
 describe('TicketListComponent', () => {
   let mockTickets: Ticket[];

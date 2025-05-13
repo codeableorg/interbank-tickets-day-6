@@ -3,7 +3,7 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TicketsService } from './tickets.service';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import {
   CreateTicketDto,
   Filter,
@@ -12,10 +12,11 @@ import {
   UpdateTicketDto,
 } from './ticket.model';
 import { provideHttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 describe('TicketService', () => {
   let service: TicketsService;
-  let apiUrl = 'http://localhost:3000/api/tickets';
+  let apiUrl = environment.apiUrl;
 
   // Helper function to create mock tickets
   const createMockTicket = (

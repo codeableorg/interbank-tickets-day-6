@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, catchError, throwError, switchMap } from 'rxjs';
 import { Ticket } from './ticket.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { environment } from '../../environments/environment';
 
 type CurrentTicketState = {
   currentTicket: Ticket | null;
@@ -15,7 +16,7 @@ type CurrentTicketState = {
 })
 export class CurrentTicketService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/tickets';
+  private apiUrl = environment.apiUrl;
 
   // State
   private state = signal<CurrentTicketState>({
