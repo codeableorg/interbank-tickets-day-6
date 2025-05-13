@@ -35,6 +35,7 @@
     <button
       (click)="statusChange.emit({ ticket: ticket(), status: 'closed' })"
       class="action-btn complete-btn"
+      [id]="'ticket-complete-' + ticket().id"
     >
       Mark as Complete
     </button>
